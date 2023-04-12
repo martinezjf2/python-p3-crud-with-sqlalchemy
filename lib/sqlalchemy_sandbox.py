@@ -63,6 +63,8 @@ if __name__ == '__main__':
     # print(f"New student ID is {albert_einstein.id}.")
     # print(f"New student ID is {alan_turing.id}.")
     
+    
+    # Read Records
     students = session.query(Student)
     print([student for student in students])
     
@@ -71,32 +73,41 @@ if __name__ == '__main__':
     students = session.query(Student).all()
     print(students)   
     
+    
+    # Read Records with only names being returned
     names = session.query(Student.name).all() 
     print(names)
     
+    
+    # Order Students by student's name
     students_by_name = session.query(Student.name).order_by(Student.name).all()
     print(students_by_name)
-   
+    
+    # Order students by student's grade from descending order'   
     students_by_grade_desc = session.query(Student.name, Student.grade).order_by(desc(Student.grade)).all()
     print(students_by_grade_desc)
     
+    # Read the oldest student based on their birthday
     oldest_student = session.query(Student.name, Student.birthday).order_by(desc(Student.grade)).limit(1).all()
     print(oldest_student)
     
     oldest_student = session.query(Student.name, Student.birthday).order_by(desc(Student.grade)).first()
     print(oldest_student)
 
+    # Using func to return the amound of students
     student_count = session.query(func.count(Student.id)).first()
     print(student_count)
     
+    # Return a student who has various conditions to be true
     query = session.query(Student).filter(Student.name.like('%Alan%'), Student.grade == 11).all()
     for record in query:
         print(record.name)
         
-    
+    # Using the update method to update students grade plus 1
     session.query(Student).update({Student.grade: Student.grade + 1})
     print([(student.name, student.grade) for student in session.query(Student)])
     
+    # Deleting a Student based if their name is Albert Einstein
     query = session.query(Student).filter(Student.name == "Albert Einstein")
     albert_einstein = query.first()
     session.delete(albert_einstein)
